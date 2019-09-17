@@ -1,0 +1,15 @@
+# - Config file for the hwcam lib
+# It defines the following variables
+#
+#  HWCAM_INCLUDE_DIRS - include directories
+#  HWCAM_LIBRARY_DIR  - library directory (normally not used!)
+#  HWCAM_LIBRARIES    - libraries to link against
+ 
+# Tell the user project where to find our headers and libraries
+
+FIND_PACKAGE_MESSAGE(hwcam "Found hwcam @hwcam_VERSION_STRING@" "[${HWCAM_LIBRARY}][${HWCAM_INCLUDE_DIR}]" )
+
+set(HWCAM_INCLUDE_DIR "@INSTALL_HEADERS_PATH@" )
+set(HWCAM_LIBRARY_DIR  "@INSTALL_LIB_PATH@")
+set(HWCAM_LIBRARY    hwcam )
+    

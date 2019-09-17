@@ -1,0 +1,7 @@
+#ifndef HWCAM_CONFIG_H
+#define HWCAM_CONFIG_H
+
+#define VERSION_MAJOR @hwcam_VERSION_MAJOR@
+#define VERSION_MINOR @hwcam_VERSION_MINOR@
+
+#endif
