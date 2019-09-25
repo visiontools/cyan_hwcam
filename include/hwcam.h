@@ -4,8 +4,6 @@
 #include <cyan/color/colors.h>
 #include <cyan/image/image.h>
 
-
-
 typedef enum {
     HWCAM_FILE ;
     HWCAM_V4L2 ;
@@ -18,5 +16,12 @@ typedef enum {
     HWRES_1024x768 ;
     HWRES_1280x1024 ;
 } hw_resolution_t ;
+
+typedef enum {
+    HWFPS_15 ;
+    HWFPS_24 ;
+    HWFPS_30 ;
+    HWFPS_60 ;
+} hw_fps_t ;
 
 #endif
