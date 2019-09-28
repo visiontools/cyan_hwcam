@@ -91,9 +91,7 @@ int print_caps(int fd)
         fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         fmt.fmt.pix.width = 640;
         fmt.fmt.pix.height = 480;
-        //fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_BGR24;
-        //fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_GREY;
-        fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+        fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
         fmt.fmt.pix.field = V4L2_FIELD_NONE;
         
         if (-1 == xioctl(fd, VIDIOC_S_FMT, &fmt))
@@ -144,8 +142,18 @@ int init_mmap(int fd)
  
     return 0;
 }
- 
-int capture_image(int fd)
+
+int clamp( int x, int min, int max){
+if (x < min)
+    return min;
+else 
+    if (x > max)
+        return max;
+return x ;
+}
+
+
+int capture_image(int fd, int ii)
 {
     struct v4l2_buffer buf = {0};
     buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -180,24 +188,52 @@ int capture_image(int fd)
         perror("Retrieving Frame");
         return 1;
     }
-    printf ("saving image\n");
+    //printf ("saving image\n");
     
-//    IplImage* frame;
-//    CvMat cvmat = cvMat(480, 640, CV_8UC3, (void*)buffer);
-//    frame = cvDecodeImage(&cvmat, 1);
-//    cvSaveImage("image.jpg", frame, 0);
- 
     image_t * tmp = image_new( 640, 480, CYAN_COLORTYPE_RGB ) ;
     int i,j,k ;
+    int R,G,B ;
+    int C,D,E ;
     k = 0 ;
-    for (i=0;i<640;i++) {
-        for(j=0;j<480;j++){
+    unsigned char* bb ;
+    bb = buffer ;
+    for(j=0;j<480;j++){
+        for (i=0;i<640;i+=2) {
+        unsigned char y1,u,y2,v;
+        y1 = bb[k] ;
+        u = bb[k+1] ;
+        y2 = bb[k+2] ;
+        v = bb[k+3] ;
+        
+        C = y1 - 16 ;
+        D = u - 128 ;
+        E = v - 128 ;
+        R = ( 298*C + 409*E + 128 ) >> 8 ;
+        G = ( 298*C - 100*D - 208*E + 128 ) >> 8 ;
+        B = ( 298*C + 516*D + 128 ) >> 8 ;
         color_t* pixel = image_get_pixel_pointer( tmp, i,j ) ;
-        pixel->coords[RGB_R] = ( (double) buffer[k++] ) / 255.0 ; 
-        pixel->coords[RGB_G] = ( (double) buffer[k++] ) / 255.0 ; 
-        pixel->coords[RGB_B] = ( (double) buffer[k++] ) / 255.0 ; 
+        pixel->coords[RGB_R] = ((double) clamp(R,0,255)) / 255.0 ;
+        pixel->coords[RGB_G] = ((double) clamp(G,0,255)) / 255.0 ;
+        pixel->coords[RGB_B] = ((double) clamp(B,0,255)) / 255.0 ;
+
+        C = y2 - 16 ;
+        D = u - 128 ;
+        E = v - 128 ;
+        R = ( 298*C + 409*E + 128 ) >> 8 ;
+        G = ( 298*C - 100*D - 208*E + 128 ) >> 8 ;
+        B = ( 298*C + 516*D + 128 ) >> 8 ;
+        pixel = image_get_pixel_pointer( tmp, i+1,j ) ;
+        pixel->coords[RGB_R] = ((double) clamp(R,0,255)) / 255.0 ;
+        pixel->coords[RGB_G] = ((double) clamp(G,0,255)) / 255.0 ;
+        pixel->coords[RGB_B] = ((double) clamp(B,0,255)) / 255.0 ;
+
+        k+=4 ;
         }
     }
+
+    char filename[255] ;
+    sprintf(filename, "%d.ppm",ii ) ;
+    //image_save_ppm( tmp, filename ) ; 
 
     image_free( tmp );
 
@@ -208,8 +244,7 @@ int capture_image(int fd)
 int main()
 {
         int fd;
- 
-        fd = open("/dev/video0", O_RDWR);
+        fd = open("/dev/video2", O_RDWR);
         if (fd == -1)
         {
                 perror("Opening video device");
@@ -221,9 +256,9 @@ int main()
         if(init_mmap(fd))
             return 1;
         int i;
-        for(i=0; i<5; i++)
+        for(i=0; i<15; i++)
         {
-            if(capture_image(fd))
+            if(capture_image(fd,i))
                 return 1;
         }
         close(fd);
