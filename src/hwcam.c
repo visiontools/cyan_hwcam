@@ -1,4 +1,5 @@
 #include "hwcam.h"
-#include "hwcam.h"
-#include "hwcam.h"
 
+int test() {
+    return 0 ;
+}

@@ -1,18 +1,17 @@
-### CMake file for hwcam 
+### CMake file for cyan_hwcam 
 ###
-###     Author : glaconbleu@codices.org
+###     Author : seb@codices.org
 ###
 ###############################################################################
 
-
 cmake_minimum_required (VERSION 2.6)
 
-project (hwcam)
-set (hwcam_VERSION_MAJOR 0)
-set (hwcam_VERSION_MINOR 1)
-set (hwcam_VERSION_PATCH 1)
-set (hwcam_VERSION_STRING
-	${hwcam_VERSION_MAJOR}.${hwcam_VERSION_MINOR}.${hwcam_VERSION_PATCH} )
+project (cyan_hwcam)
+set (cyan_hwcam_VERSION_MAJOR 0)
+set (cyan_hwcam_VERSION_MINOR 1)
+set (cyan_hwcam_VERSION_PATCH 1)
+set (cyan_hwcam_VERSION_STRING
+	${cyan_hwcam_VERSION_MAJOR}.${cyan_hwcam_VERSION_MINOR}.${cyan_hwcam_VERSION_PATCH} )
 
 set( CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /lib /usr/lib /usr/local/lib )
 set( CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include /usr/local/include )
@@ -32,12 +31,6 @@ foreach(p LIB BIN HEADERS AR)
         endif()
 endforeach()
 
-
-### Options ###
-
-option(ENABLE_CAM_FFMPEG    "Enable virtual cameras based on video files (FFMPEG)" ON)
-option(ENABLE_CAM_GSTREAMER "Enable Gstreamer cameras" ON)
-option(ENABLE_CAM_V4L2      "Enable V4L2 cameras (USB/webcams)" ON)
 
 ### Search for Lib/Headers
 
@@ -62,36 +55,33 @@ file( GLOB hdr "include/*.h"  )
 
 ### Targets
 
-add_library( "hwcam" SHARED ${src} ${hdr} ) 
+add_library( "cyan_hwcam" SHARED ${src} ${hdr} ) 
 
-set_target_properties(hwcam PROPERTIES VERSION ${hwcam_VERSION_STRING}
-                                       SOVERSION ${hwcam_VERSION_MAJOR})
+set_target_properties(cyan_hwcam PROPERTIES VERSION ${cyan_hwcam_VERSION_STRING}
+                                       SOVERSION ${cyan_hwcam_VERSION_MAJOR})
 
 ### Linking
 
-target_link_libraries( "hwcam" "m" )
+target_link_libraries( "cyan_hwcam" "m" )
 
 ### Cmake file
 
-configure_file(hwcamConfig.cmake.in "${PROJECT_BINARY_DIR}/hwcamConfig.cmake" @ONLY)
+configure_file(cyan_hwcamConfig.cmake.in "${PROJECT_BINARY_DIR}/cyan_hwcamConfig.cmake" @ONLY)
 
-install ( FILES "${PROJECT_BINARY_DIR}/hwcamConfig.cmake" 
-      DESTINATION "${INSTALL_LIB_PATH}/hwcam" COMPONENT dev )  
-
-configure_file(hwcamConfigVersion.cmake.in
-	"${PROJECT_BINARY_DIR}/hwcamConfigVersion.cmake" @ONLY)
-
-install ( FILES "${PROJECT_BINARY_DIR}/hwcamConfigVersion.cmake" 
-      DESTINATION "${INSTALL_LIB_PATH}/hwcam" COMPONENT dev )  
+install ( FILES "${PROJECT_BINARY_DIR}/cyan_hwcamConfig.cmake" 
+      DESTINATION "${INSTALL_LIB_PATH}/cyan_hwcam" COMPONENT dev )  
 
 ### Install 
 
-install( TARGETS "hwcam"
+install( TARGETS "cyan_hwcam"
 	    RUNTIME DESTINATION ${INSTALL_BIN_PATH}  COMPONENT main
 	    LIBRARY DESTINATION ${INSTALL_LIB_PATH}  COMPONENT main
             ARCHIVE DESTINATION ${INSTALL_AR_PATH}   COMPONENT main )
 
 install( FILES ${hdr}
-	    DESTINATION ${INSTALL_HEADERS_PATH}/hwcam/${name}
+	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan_hwcam/${name}
 	    COMPONENT main )
 
+### plugins
+
+add_subdirectory(plugins)

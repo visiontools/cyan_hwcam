@@ -1,0 +1,4 @@
+add_subdirectory(hwcam_stillimage)
+add_subdirectory(hwcam_gstreamer)
+add_subdirectory(hwcam_ffmpeg)
+add_subdirectory(hwcam_v4l2)
