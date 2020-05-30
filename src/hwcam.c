@@ -154,6 +154,7 @@ int hwcam_get_serial( hwcam_t* cam, unsigned char** serial, size_t* serial_size 
 
 
 int hwcam_set_mode( hwcam_t* cam, int fps, hw_resolution_t res, int mono) {
+    int i ;
     if ( cam->running != 0 ) {
         CYAN_ERROR_MSG( "Camera is Running") ;
         return ERR_NOPE ;
@@ -163,7 +164,25 @@ int hwcam_set_mode( hwcam_t* cam, int fps, hw_resolution_t res, int mono) {
         return ERR_NOPE ;
     }
 
-    // TODO: must reallocate image queue
+    // resize images in queue
+
+    for (i=0; i<cam->img_queue->buffer_size; i++ ) 
+        if ( image_resize( cam->img_queue->images[i], res.cols, res.rows, mono, NULL ) != ERR_OK ) {
+            CYAN_ERROR_MSG( "Could not resize images" ) ;
+            return ERR_NOPE ;
+        }
+
+    // resize queue buffer if needed
+    
+
+    if ( fps > cam->img_queue->buffer_size ) {
+            if ( imqueue_set_buffer_size( cam->img_queue, fps ) != ERR_OK ) {
+            CYAN_ERROR_MSG( "Could not resize buffer" ) ;
+            return ERR_NOPE ;
+            }
+    }
+
+    // Tester si la queue est suffisamment grande par rapport à fps, et l'agrandir le cas échéant
 
     return ERR_OK ;
 }
@@ -213,6 +232,8 @@ int hwcam_stop( hwcam_t* cam ) {
     cam->running = 0 ;
 
     pthread_join( cam->pt_handle, NULL ) ;
+   
+    imqueue_reset( cam->img_queue ) ;
     
     return ERR_OK ;
 
@@ -229,7 +250,6 @@ void* loop_fct( void* data ) {
 
             if ( imqueue_cam_pop( cam->img_queue, &img ) != ERR_OK ) {
                 CYAN_ERROR_MSG( "Could not pop from queue" ) ;
-                cam->running = 0 ;
             }
 
             if ( cam->get_frame( cam->cam_handle, img ) != ERR_OK ) {
@@ -237,7 +257,7 @@ void* loop_fct( void* data ) {
                 cam->running = 0 ;
             }
             
-            if ( cam->get_frame( cam->cam_handle, img ) != ERR_OK ) {
+            if ( imqueue_cam_push( cam->img_queue, img ) != ERR_OK ) {
                 CYAN_ERROR_MSG( "Could not push into queue" ) ;
                 cam->running = 0 ;
             }

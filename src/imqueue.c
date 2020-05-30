@@ -113,3 +113,47 @@ int imqueue_client_pop(  imqueue_t* queue, image_t** img ) {
     return ERR_OK ;
 }
 
+int imqueue_reset( imqueue_t* queue ) {
+    int i ;
+    queue->head1 = 0 ;
+    queue->size1 = queue->buffer_size ;
+    queue->head2 = 0 ;
+    queue->size2 = 0 ;
+    for (i=0; i<queue->buffer_size; i++ )
+        queue->fifo1[i] = queue->images[i] ;
+    return ERR_OK ;
+}
+
+int imqueue_set_buffer_size( imqueue_t* queue, int new_size ) {
+    int i ;
+    int old_size = queue->buffer_size ;
+    int cols, rows, monochrome ;
+
+    if ( new_size < old_size ) {
+        for (i=new_size; i<old_size; i++ ) { 
+            image_free( queue->images[i] ) ;
+        }
+    }
+
+    queue->fifo1 = realloc( queue->fifo1, new_size*sizeof(image_t*) ) ;
+    queue->fifo2 = realloc( queue->fifo1, new_size*sizeof(image_t*) ) ;
+    queue->images = realloc( queue->fifo1, new_size*sizeof(image_t*) ) ;
+
+    if ( new_size > old_size ) {
+        int cols = queue->images[0]->cols ;
+        int rows = queue->images[0]->rows ;
+        int monochrome = queue->images[0]->monochrome ;
+        for (i=old_size; i<new_size; i++ ) {
+            queue->images[i] = image_new( cols, rows, monochrome ) ; 
+        }
+    }
+
+    queue->buffer_size = new_size ;
+
+    queue->head1 = 0 ;
+    queue->size1 = new_size ;
+    queue->head2 = 0 ;
+    queue->size2 = 0 ;
+   
+    return ERR_OK ;
+}

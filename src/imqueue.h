@@ -38,4 +38,7 @@ int imqueue_cam_pop(  imqueue_t*, image_t** ) ;
 int imqueue_client_push( imqueue_t*, image_t* ) ;
 int imqueue_client_pop(  imqueue_t*, image_t** ) ;
 
+int imqueue_reset( imqueue_t*) ;
+int imqueue_set_buffer_size( imqueue_t*, int buffer_size ) ;
+
 #endif
