@@ -127,7 +127,7 @@ void hwcam_free( hwcam_t* cam ) {
 }
 
 
-int hwcam_get_available_modes( hwcam_t* cam, hw_mode_t* modes, int* nb_modes ) {
+int hwcam_get_available_modes( hwcam_t* cam, hw_mode_t** modes, int* nb_modes ) {
     if ( cam->running != 0 ) {
         CYAN_ERROR_MSG( "Camera is Running") ;
         return ERR_NOPE ;

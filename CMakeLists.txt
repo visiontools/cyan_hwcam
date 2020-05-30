@@ -21,10 +21,11 @@ set ( INSTALL_BIN_PATH bin )
 set ( INSTALL_LIB_PATH lib )
 set ( INSTALL_AR_PATH  lib )
 set ( INSTALL_HEADERS_PATH include )
+set ( INSTALL_PLUGINS_PATH share/cyan_hwcam )
 
 # Make relative paths absolute (needed later on)
 
-foreach(p LIB BIN HEADERS AR)
+foreach(p LIB BIN HEADERS AR PLUGINS)
         set(var INSTALL_${p}_PATH)
         if(NOT IS_ABSOLUTE "${${var}}")
                 set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
@@ -32,8 +33,16 @@ foreach(p LIB BIN HEADERS AR)
 endforeach()
 
 
+### Options
+
+option(BUILD_TEST   "Build cyan_hwcam tests" ON)
+
 ### Search for Lib/Headers
 
+    ### I need pthreads
+
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
 
 ### Config File
 
@@ -62,7 +71,7 @@ set_target_properties(cyan_hwcam PROPERTIES VERSION ${cyan_hwcam_VERSION_STRING}
 
 ### Linking
 
-target_link_libraries( "cyan_hwcam" "m" )
+target_link_libraries( "cyan_hwcam" ${CMAKE_DL_LIBS} Threads::Threads )
 
 ### Cmake file
 
@@ -82,6 +91,15 @@ install( FILES ${hdr}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan_hwcam/${name}
 	    COMPONENT main )
 
+### tests
+
+if (BUILD_TEST)
+    enable_testing()
+endif()
+
 ### plugins
 
 add_subdirectory(plugins)
+
+
+

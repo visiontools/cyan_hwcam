@@ -7,9 +7,9 @@
 
 // This is the API every hwcam plugin should implement
 
-int init( void** cam_handle, va_list_args );
+int init( void** cam_handle, va_list args );
 int deinit( void* cam_handle);
-int get_available_modes( void* cam_handle, hw_mode_t* modes, int* nb_modes ) ;
+int get_available_modes( void* cam_handle, hw_mode_t** modes, int* nb_modes ) ;
 int get_serial( void* cam_handle, unsigned char** serial, size_t* serial_size ) ;
 int set_mode( void* cam_handle, int fps, hw_resolution_t res, int mono ) ;
 int get_mode( void* cam_handle, int* fps, hw_resolution_t* res, int* mono ) ;

@@ -9,6 +9,7 @@ typedef struct {
 typedef struct {
     hw_resolution_t resolution ;        // current resolution
     int             fps ;               // frames / sec
+    int             monochrome ;        // monochrome ? 
 } hw_mode_t ;
 
 

@@ -21,7 +21,7 @@ typedef struct {
 
     int (*init)( void** cam_handle, va_list args  );
     int (*deinit)( void* cam_handle);
-    int (*get_available_modes)( void* cam_handle, hw_mode_t* modes, int* nb_modes ) ;
+    int (*get_available_modes)( void* cam_handle, hw_mode_t** modes, int* nb_modes ) ;
     int (*get_serial)( void* cam_handle, unsigned char** serial, size_t* serial_size ) ;
     int (*set_mode)( void* cam_handle, int fps, hw_resolution_t,  int mono ) ;
     int (*get_mode)( void* cam_handle, int* fps, hw_resolution_t*, int* mono ) ;
@@ -45,7 +45,7 @@ typedef struct {
 hwcam_t* hwcam_new( unsigned char* plugin, ... ) ;
 void     hwcam_free( hwcam_t* ) ;
 
-int hwcam_get_available_modes(hwcam_t*, hw_mode_t* modes, int* nb_modes ) ;
+int hwcam_get_available_modes(hwcam_t*, hw_mode_t** modes, int* nb_modes ) ;
 int hwcam_get_serial( hwcam_t*, unsigned char** serial, size_t* serial_size ) ;
 
 int hwcam_set_mode( hwcam_t*, int fps, hw_resolution_t res, int mono) ;
