@@ -1,27 +1,11 @@
-#ifndef HWCAM_H
-#define HWCAM_H
+#ifndef CYAN_HWCAM_H
+#define CYAN_HWCAM_H
 
 #include <pthread.h>
 #include <cyan/image/image.h>
 
-typedef enum {
-    HWRES_640x480 ,
-    HWRES_800x600 ,
-    HWRES_1024x768 ,
-    HWRES_1280x1024 ,
-} hw_resolution_t ;
-
-typedef enum {
-    HWFPS_15 ,
-    HWFPS_24 ,
-    HWFPS_30 ,
-    HWFPS_60 ,
-} hw_fps_t ;
-
-typedef struct {
-    hw_resolution_t resolution ;        // current resolution
-    hw_fps_t        fps ;               // frames / sec
-} hw_mode_t ;
+#include <cyan/image/image.h>
+#include <cyan_hwcam/modes.h>
 
 struct imqueue ;
 
@@ -43,7 +27,7 @@ typedef struct {
 
     // image buffer
 
-    struct imqueue*  img_queue ;
+    struct imqueue_s*  img_queue ;
 
     // thread
 
