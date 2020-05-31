@@ -10,7 +10,7 @@
 int init( void** cam_handle, va_list args );
 int deinit( void* cam_handle);
 int get_available_modes( void* cam_handle, hw_mode_t** modes, int* nb_modes ) ;
-int get_serial( void* cam_handle, unsigned char** serial, size_t* serial_size ) ;
+int get_serial( void* cam_handle, char** serial, size_t* serial_size ) ;
 int set_mode( void* cam_handle, int mode ) ;
 int get_mode( void* cam_handle, int* mode ) ;
 int start_acqui ( void* cam_handle ) ;

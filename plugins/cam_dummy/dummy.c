@@ -58,7 +58,7 @@ int get_available_modes( void* cam_handle, hw_mode_t** modes, int* nb_modes ) {
     return ERR_OK ;
 }
 
-int get_serial( void* cam_handle, unsigned char** serial, size_t* serial_size )  {
+int get_serial( void* cam_handle, char** serial, size_t* serial_size )  {
     char tmp_serial[]="00:11:22:33:44:55:66:77:88:99" ;
     printf("[dummy] *** get_serial()\n" ) ;
     printf("[dummy] \t cam_handle value is %p\n", cam_handle ) ;

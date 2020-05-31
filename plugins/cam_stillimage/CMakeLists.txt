@@ -23,8 +23,8 @@ if (ENABLE_CAM_STILLIMAGE)
     install( TARGETS "cam_stillimage"
         LIBRARY DESTINATION "${INSTALL_PLUGINS_PATH}" ) 
 
-    # if (BUILD_TEST)
-    #     add_subdirectory(test)
-    # endif()
+    if (BUILD_TEST)
+        add_subdirectory(test)
+    endif()
 
 endif()

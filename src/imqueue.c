@@ -64,7 +64,6 @@ void imqueue_free( imqueue_t* queue ) {
 int imqueue_cam_push( imqueue_t* queue, image_t* img) {
     pthread_mutex_lock( &(queue->mutex2) ) ;
     if (  queue->size2 + 1 > queue->buffer_size ) {
-        CYAN_ERROR( ERR_FULL ) ;
         pthread_mutex_unlock( &(queue->mutex2) ) ;
         return ERR_FULL ;
     }
@@ -77,7 +76,6 @@ int imqueue_cam_push( imqueue_t* queue, image_t* img) {
 int imqueue_cam_pop(  imqueue_t* queue, image_t** img ) {
     pthread_mutex_lock( &(queue->mutex1) ) ;
     if ( queue->size1 <= 0 ) {
-        CYAN_ERROR( ERR_EMPTY ) ;
         pthread_mutex_unlock( &(queue->mutex1) ) ;
         return ERR_EMPTY ;
     }
@@ -91,7 +89,6 @@ int imqueue_cam_pop(  imqueue_t* queue, image_t** img ) {
 int imqueue_client_push( imqueue_t* queue, image_t* img) {
     pthread_mutex_lock( &(queue->mutex1) ) ;
     if (  queue->size1 + 1 > queue->buffer_size ) {
-        CYAN_ERROR( ERR_FULL ) ;
         pthread_mutex_unlock( &(queue->mutex1) ) ;
         return ERR_FULL ;
     }

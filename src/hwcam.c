@@ -7,6 +7,7 @@
 #include "cyan_hwcam/hwcam.h"
 #include "imqueue.h"
 
+#define BACKOFF_TIME    50
 
 void* loop_fct( void* img ) ;
 
@@ -151,7 +152,7 @@ int hwcam_get_available_modes( hwcam_t* cam, hw_mode_t** modes, int* nb_modes ) 
 }
 
 
-int hwcam_get_serial( hwcam_t* cam, unsigned char** serial, size_t* serial_size ) {
+int hwcam_get_serial( hwcam_t* cam, char** serial, size_t* serial_size ) {
     if ( cam->running != 0 ) {
         CYAN_ERROR_MSG( "Camera is Running") ;
         return ERR_NOPE ;
@@ -261,6 +262,7 @@ int hwcam_stop_stream( hwcam_t* cam ) {
 
 void* loop_fct( void* data ) {
 
+    int ret ;
     hwcam_t* cam = (hwcam_t*) data ;
     image_t* img ;
 
@@ -268,19 +270,23 @@ void* loop_fct( void* data ) {
 
     while ( cam->running ) {
 
-            if ( imqueue_cam_pop( cam->img_queue, &img ) != ERR_OK ) {
-                CYAN_ERROR_MSG( "Could not pop from queue" ) ;
-            }
+            do {
+                ret = imqueue_cam_pop( cam->img_queue, &img ) != ERR_OK ;
+                if ( ret != ERR_OK )
+                    usleep( BACKOFF_TIME ) ;
+             } while ( ret != ERR_OK ) ;
 
             if ( cam->get_frame( cam->cam_handle, img ) != ERR_OK ) {
                 CYAN_ERROR_MSG( "Could not get frame" ) ;
                 cam->running = 0 ;
             }
-            
-            if ( imqueue_cam_push( cam->img_queue, img ) != ERR_OK ) {
-                CYAN_ERROR_MSG( "Could not push into queue" ) ;
-                cam->running = 0 ;
-            }
+           
+
+            do {
+                ret = imqueue_cam_push( cam->img_queue, img ) != ERR_OK ;
+                if ( ret != ERR_OK )
+                    usleep( BACKOFF_TIME ) ;
+             } while ( ret != ERR_OK ) ;
 
     }
 
@@ -295,12 +301,17 @@ int hwcam_dequeue ( hwcam_t* cam, image_t** image ) {
     do { 
         ret = imqueue_client_pop( cam->img_queue, image ) ;
         if ( ret != ERR_OK )
-            usleep( 1000 ) ;
+            usleep( BACKOFF_TIME ) ;
     } while ( ret != ERR_OK ) ;
+    return ERR_OK ;
 }
 
 int hwcam_enqueue ( hwcam_t* cam, image_t* image ) {
-
-    imqueue_client_push( cam->img_queue, image ) ;
-
+    int ret ;
+    do { 
+        ret = imqueue_client_push( cam->img_queue, image ) ;
+        if ( ret != ERR_OK )
+            usleep( BACKOFF_TIME ) ;
+    } while ( ret != ERR_OK ) ;
+    return ERR_OK ;
 }
