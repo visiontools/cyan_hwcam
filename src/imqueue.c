@@ -26,6 +26,8 @@ imqueue_t* imqueue_new( int buffer_size , int cols, int rows, int mono) {
         return NULL ;
     }
 
+    tmp->buffer_size = buffer_size ;
+
     for ( i=0; i<buffer_size; i++ ) {
         tmp->images[i] = image_new( cols, rows, mono ) ;
         if ( tmp->images[i] == NULL ) {
@@ -102,7 +104,6 @@ int imqueue_client_push( imqueue_t* queue, image_t* img) {
 int imqueue_client_pop(  imqueue_t* queue, image_t** img ) {
     pthread_mutex_lock( &(queue->mutex2) ) ;
     if ( queue->size2 <= 0 ) {
-        CYAN_ERROR( ERR_EMPTY ) ;
         pthread_mutex_unlock( &(queue->mutex2) ) ;
         return ERR_EMPTY ;
     }

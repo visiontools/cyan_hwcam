@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include <cyan/common/error.h>
 #include "cyan_hwcam/hwcam.h"
@@ -52,6 +53,7 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
    tmp->get_available_modes = dlsym( tmp->dl_handle, "get_available_modes"); 
    tmp->get_serial = dlsym( tmp->dl_handle, "get_serial"); 
    tmp->set_mode = dlsym( tmp->dl_handle, "set_mode"); 
+   tmp->get_mode = dlsym( tmp->dl_handle, "get_mode"); 
    tmp->start_acqui = dlsym( tmp->dl_handle, "start_acqui"); 
    tmp->stop_acqui = dlsym( tmp->dl_handle, "stop_acqui"); 
    tmp->get_frame = dlsym( tmp->dl_handle, "get_frame"); 
@@ -201,7 +203,7 @@ int hwcam_get_mode( hwcam_t* cam, int* fps, hw_resolution_t* res, int* mono ) {
 }
 
 
-int hwcam_start( hwcam_t* cam) {
+int hwcam_start_stream( hwcam_t* cam) {
     
     int ret ;
 
@@ -222,7 +224,7 @@ int hwcam_start( hwcam_t* cam) {
 }
 
 
-int hwcam_stop( hwcam_t* cam ) {
+int hwcam_stop_stream( hwcam_t* cam ) {
     int ret ;
     if ( cam->running != 1 ) {
         CYAN_ERROR_MSG( "Camera is not running ...") ;
@@ -267,5 +269,20 @@ void* loop_fct( void* data ) {
     cam->stop_acqui( cam->cam_handle ) ;
 
     pthread_exit( NULL ) ;
+
+}
+
+int hwcam_dequeue ( hwcam_t* cam, image_t** image ) {
+    int ret ;
+    do { 
+        ret = imqueue_client_pop( cam->img_queue, image ) ;
+        if ( ret != ERR_OK )
+            usleep( 1000 ) ;
+    } while ( ret != ERR_OK ) ;
+}
+
+int hwcam_enqueue ( hwcam_t* cam, image_t* image ) {
+
+    imqueue_client_push( cam->img_queue, image ) ;
 
 }

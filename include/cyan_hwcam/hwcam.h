@@ -54,7 +54,7 @@ int hwcam_get_mode( hwcam_t*, int* fps, hw_resolution_t* res, int* mono ) ;
 int hwcam_start_stream( hwcam_t* ) ;
 int hwcam_stop_stream( hwcam_t* ) ;
 
-image_t* hwcam_dequeue ( hwcam_t* ) ;
-int      hwcam_enqueue ( hwcam_t*, image_t* ) ;
+int hwcam_dequeue ( hwcam_t*, image_t** ) ;
+int hwcam_enqueue ( hwcam_t*, image_t* ) ;
 
 #endif

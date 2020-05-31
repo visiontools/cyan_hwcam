@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "cyan_hwcam/plugin.h"
 #include "cyan_hwcam/modes.h"
@@ -96,13 +97,17 @@ int get_mode( void* cam_handle, int* fps, hw_resolution_t* res, int* mono ) {
 int start_acqui ( void* cam_handle ) {
     printf("[dummy] *** start_acqui()\n" ) ;
     printf("[dummy] \t cam_handle value is %p\n", cam_handle ) ;
+    return ERR_OK ;
 }
 
 int stop_acqui ( void* cam_handle ) {
     printf("[dummy] *** stop_acqui()\n" ) ;
     printf("[dummy] \t cam_handle value is %p\n", cam_handle ) ;
+    return ERR_OK ;
 }
 
 int get_frame ( void* cam_handle, image_t* img ) {
     printf("[dummy] *** get_frame()\n" ) ;
+    usleep( 1000 ) ;
+    return ERR_OK ;
 }
