@@ -13,11 +13,11 @@ void* loop_fct( void* img ) ;
 
 hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
     hwcam_t* tmp ; 
-    int fps ;
-    hw_resolution_t res ;
-    int mono ;
     va_list args ;
     int ret ;
+    hw_mode_t*  modes ;
+    int         nb_modes ;
+    int         current_mode ;
     
     tmp = (hwcam_t*) malloc( sizeof( hwcam_t ) ) ;
     if ( tmp == NULL ) {
@@ -84,14 +84,23 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
 
     // Get the current resolution and create the buffer
 
-    if ( tmp->get_mode( tmp->cam_handle, &fps, &res, &mono ) != ERR_OK ) {
+    if ( tmp->get_available_modes( tmp->cam_handle, &modes, &nb_modes ) != ERR_OK ) {
+        CYAN_ERROR_MSG("Could not get camera available modes") ;
+        return NULL ;
+    }
+
+    if ( tmp->get_mode( tmp->cam_handle, &current_mode ) != ERR_OK ) {
         CYAN_ERROR_MSG("Could not get camera mode") ;
         return NULL ;
     }
 
         // Default : Buffer is 1 sec of video
 
-    tmp->img_queue = imqueue_new( fps, res.cols, res.rows, mono ) ; 
+    tmp->img_queue = imqueue_new( 
+            modes[current_mode].fps, 
+            modes[current_mode].resolution.cols, 
+            modes[current_mode].resolution.rows, 
+            modes[current_mode].monochrome ) ; 
 
     if ( tmp->img_queue == NULL ) {
         CYAN_ERROR_MSG("Could not allocate image queue") ;
@@ -155,21 +164,32 @@ int hwcam_get_serial( hwcam_t* cam, unsigned char** serial, size_t* serial_size 
 }
 
 
-int hwcam_set_mode( hwcam_t* cam, int fps, hw_resolution_t res, int mono) {
+int hwcam_set_mode( hwcam_t* cam, int mode) {
     int i ;
+    hw_mode_t *modes ;
+    int nb_modes ;
+
     if ( cam->running != 0 ) {
         CYAN_ERROR_MSG( "Camera is Running") ;
         return ERR_NOPE ;
     }
-    if ( cam->set_mode( cam->cam_handle, fps, res, mono ) != ERR_OK ) {
+    if ( cam->set_mode( cam->cam_handle, mode ) != ERR_OK ) {
         CYAN_ERROR( ERR_NOPE ) ;
         return ERR_NOPE ;
     }
 
     // resize images in queue
 
+    if ( cam->get_available_modes( cam->cam_handle, &modes, &nb_modes ) != ERR_OK ) {
+        CYAN_ERROR_MSG("Could not retrieve available modes") ;
+        return ERR_NOPE ;
+    }
+
     for (i=0; i<cam->img_queue->buffer_size; i++ ) 
-        if ( image_resize( cam->img_queue->images[i], res.cols, res.rows, mono, NULL ) != ERR_OK ) {
+        if ( image_resize( cam->img_queue->images[i], 
+                    modes[mode].resolution.cols,
+                    modes[mode].resolution.rows,
+                    modes[mode].monochrome, NULL ) != ERR_OK ) {
             CYAN_ERROR_MSG( "Could not resize images" ) ;
             return ERR_NOPE ;
         }
@@ -177,25 +197,23 @@ int hwcam_set_mode( hwcam_t* cam, int fps, hw_resolution_t res, int mono) {
     // resize queue buffer if needed
     
 
-    if ( fps > cam->img_queue->buffer_size ) {
-            if ( imqueue_set_buffer_size( cam->img_queue, fps ) != ERR_OK ) {
+    if ( modes[mode].fps > cam->img_queue->buffer_size ) {
+            if ( imqueue_set_buffer_size( cam->img_queue, modes[mode].fps ) != ERR_OK ) {
             CYAN_ERROR_MSG( "Could not resize buffer" ) ;
             return ERR_NOPE ;
             }
     }
 
-    // Tester si la queue est suffisamment grande par rapport à fps, et l'agrandir le cas échéant
-
     return ERR_OK ;
 }
 
 
-int hwcam_get_mode( hwcam_t* cam, int* fps, hw_resolution_t* res, int* mono ) {
+int hwcam_get_mode( hwcam_t* cam, int* mode ) {
     if ( cam->running != 0 ) {
         CYAN_ERROR_MSG( "Camera is Running") ;
         return ERR_NOPE ;
     }
-    if ( cam->get_mode( cam->cam_handle, fps, res, mono ) != ERR_OK ) {
+    if ( cam->get_mode( cam->cam_handle, mode) != ERR_OK ) {
         CYAN_ERROR( ERR_NOPE ) ;
         return ERR_NOPE ;
     }

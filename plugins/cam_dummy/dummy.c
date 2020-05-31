@@ -70,27 +70,18 @@ int get_serial( void* cam_handle, unsigned char** serial, size_t* serial_size ) 
     return ERR_OK ;
 }
 
-int set_mode( void* cam_handle, int fps, hw_resolution_t res, int mono )  {
+int set_mode( void* cam_handle, int mode )  {
     printf("[dummy] *** set_mode()\n" ) ;
     printf("[dummy] \t cam_handle value is %p\n", cam_handle ) ;
-    printf("[dummy] \t fps  :  %d\n", fps ) ;
-    printf("[dummy] \t cols :  %d\n", res.cols ) ;
-    printf("[dummy] \t rows :  %d\n", res.rows ) ;
-    printf("[dummy] \t mono :  %d\n", mono ) ;
+    printf("[dummy] \t mode :  %d\n", mode ) ;
     return ERR_OK ;
 }
 
-int get_mode( void* cam_handle, int* fps, hw_resolution_t* res, int* mono ) {
+int get_mode( void* cam_handle, int* mode ) {
+    *mode = 1 ;
     printf("[dummy] *** get_mode()\n" ) ;
     printf("[dummy] \t cam_handle value is %p\n", cam_handle ) ;
-    *fps = 42 ;
-    res->cols = 123 ;
-    res->rows = 456 ;
-    *mono = 0 ;
-    printf("[dummy] \t fps  :  %d\n", *fps ) ;
-    printf("[dummy] \t cols :  %d\n", res->cols ) ;
-    printf("[dummy] \t rows :  %d\n", res->rows ) ;
-    printf("[dummy] \t mono :  %d\n", *mono ) ;
+    printf("[dummy] \t mode :  %d\n", *mode ) ;
     return ERR_OK ;
 }
 

@@ -1,11 +1,13 @@
 [dummy] *** init()
 [dummy] 	 cam_handle is set to 0x3039
+[dummy] *** get_available modes()
+[dummy] 	 cam_handle value is 0x3039
+[dummy] 	 Mode[0] 1280x960(1) @15 FPS
+[dummy] 	 Mode[1] 640x480(0) @30 FPS
+[dummy] 	 Mode[2] 320x240(0) @60 FPS
 [dummy] *** get_mode()
 [dummy] 	 cam_handle value is 0x3039
-[dummy] 	 fps  :  42
-[dummy] 	 cols :  123
-[dummy] 	 rows :  456
-[dummy] 	 mono :  0
+[dummy] 	 mode :  1
 [dummy] *** get_available modes()
 [dummy] 	 cam_handle value is 0x3039
 [dummy] 	 Mode[0] 1280x960(1) @15 FPS
