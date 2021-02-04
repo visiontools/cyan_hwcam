@@ -43,7 +43,6 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
     // Load dynamic library for plugin 
     
     tmp->dl_handle = dlopen( plugin, RTLD_NOW | RTLD_GLOBAL ) ;
-
     if ( tmp->dl_handle == NULL ) {
         CYAN_ERROR( ERR_PLUGIN ) ;
         return NULL ;
@@ -61,9 +60,11 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
 
 
     if ( (tmp->init == NULL) ||
+            (tmp->deinit == NULL) ||
             (tmp->get_available_modes == NULL) ||
             (tmp->get_serial == NULL) ||
             (tmp->set_mode == NULL) ||
+            (tmp->get_mode == NULL) ||
             (tmp->start_acqui == NULL) ||
             (tmp->stop_acqui == NULL) ||
             (tmp->get_frame == NULL) ) {
@@ -90,12 +91,19 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
         return NULL ;
     }
 
+    current_mode = -1 ;
     if ( tmp->get_mode( tmp->cam_handle, &current_mode ) != ERR_OK ) {
         CYAN_ERROR_MSG("Could not get camera mode") ;
         return NULL ;
     }
+    if ( current_mode = -1 ) {
+        CYAN_ERROR_MSG("Could not get current mode") ;
+        return NULL ;
+    }
 
-        // Default : Buffer is 1 sec of video
+
+
+     // Default : Buffer is 1 sec of video
 
     tmp->img_queue = imqueue_new( 
             modes[current_mode].fps, 
