@@ -60,7 +60,7 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 ### File lists
 
 file( GLOB src "src/*.c"  )
-file( GLOB hdr "include/*.h"  )
+file( GLOB hdr "include/cyan/hwcam/*.h"  )
 
 ### Targets
 
@@ -88,7 +88,7 @@ install( TARGETS "cyan_hwcam"
             ARCHIVE DESTINATION ${INSTALL_AR_PATH}   COMPONENT main )
 
 install( FILES ${hdr}
-	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan_hwcam/${name}
+	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/hwcam/${name}
 	    COMPONENT main )
 
 ### tests

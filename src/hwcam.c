@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 #include <cyan/common/error.h>
-#include "cyan_hwcam/hwcam.h"
+#include "cyan/hwcam/hwcam.h"
 #include "imqueue.h"
 
 #define BACKOFF_TIME    50

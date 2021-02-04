@@ -4,8 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "cyan_hwcam/plugin.h"
-#include "cyan_hwcam/modes.h"
+#include "cyan/hwcam/plugin.h"
+#include "cyan/hwcam/modes.h"
 #include "cyan/common/error.h"
 
 

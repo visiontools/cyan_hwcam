@@ -3,7 +3,7 @@
 
 
 #include <cyan/image/image.h>
-#include <cyan_hwcam/hwcam.h>
+#include <cyan/hwcam/hwcam.h>
 
 #define NB_FRAMES   500
 
@@ -21,7 +21,7 @@ int main (int argc, char** argv) {
     struct timeval stop ;
 
 
-    camera = hwcam_new( "../libcam_stillimage.so",argv[1],300,"00:11:22:33:44:55:66") ;
+    camera = hwcam_new( "../libcam_stillimage.so",argv[1],60,"00:11:22:33:44:55:66") ;
     
     hwcam_start_stream( camera ) ;
     

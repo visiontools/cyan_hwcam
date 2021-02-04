@@ -5,7 +5,7 @@
 #include <stdarg.h>
 
 #include <cyan/image/image.h>
-#include <cyan_hwcam/modes.h>
+#include <cyan/hwcam/modes.h>
 
 struct imqueue ;
 

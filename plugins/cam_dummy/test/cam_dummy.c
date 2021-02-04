@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <cyan/image/image.h>
 
-#include <cyan_hwcam/hwcam.h>
+#include <cyan/hwcam/hwcam.h>
 
 int main (int argc, char** argv) {
 

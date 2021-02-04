@@ -2,7 +2,7 @@
 #define CYAN_HWCAM_PLUGIN_H
 
 #include <cyan/image/image.h>
-#include <cyan_hwcam/modes.h>
+#include <cyan/hwcam/modes.h>
 #include <stdarg.h>
 
 // This is the API every hwcam plugin should implement
