@@ -9,9 +9,8 @@ cmake_minimum_required (VERSION 2.6)
 project (cyan_hwcam)
 set (cyan_hwcam_VERSION_MAJOR 0)
 set (cyan_hwcam_VERSION_MINOR 1)
-set (cyan_hwcam_VERSION_PATCH 1)
-set (cyan_hwcam_VERSION_STRING
-	${cyan_hwcam_VERSION_MAJOR}.${cyan_hwcam_VERSION_MINOR}.${cyan_hwcam_VERSION_PATCH} )
+set (cyan_hwcam_VERSION_PATCH 0)
+set (cyan_hwcam_VERSION ${cyan_hwcam_VERSION_MAJOR}.${cyan_hwcam_VERSION_MINOR}.${cyan_hwcam_VERSION_PATCH} )
 
 set( CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /lib /usr/lib /usr/local/lib )
 set( CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include /usr/local/include )
@@ -23,26 +22,16 @@ set ( INSTALL_AR_PATH  lib )
 set ( INSTALL_HEADERS_PATH include )
 set ( INSTALL_PLUGINS_PATH share/cyan_hwcam )
 
-# Make relative paths absolute (needed later on)
-
-foreach(p LIB BIN HEADERS AR PLUGINS)
-        set(var INSTALL_${p}_PATH)
-        if(NOT IS_ABSOLUTE "${${var}}")
-                set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-        endif()
-endforeach()
-
-
 ### Options
 
 option(BUILD_TEST   "Build cyan_hwcam tests" ON)
 
 ### Search for Lib/Headers
 
-    ### I need pthreads
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
-    set(THREADS_PREFER_PTHREAD_FLAG ON)
-    find_package(Threads REQUIRED)
+find_package(cyan REQUIRED)
 
 ### Config File
 
@@ -66,7 +55,7 @@ file( GLOB hdr "include/cyan/hwcam/*.h"  )
 
 add_library( "cyan_hwcam" SHARED ${src} ${hdr} ) 
 
-set_target_properties(cyan_hwcam PROPERTIES VERSION ${cyan_hwcam_VERSION_STRING}
+set_target_properties(cyan_hwcam PROPERTIES VERSION ${cyan_hwcam_VERSION}
                                        SOVERSION ${cyan_hwcam_VERSION_MAJOR})
 
 ### Linking
@@ -78,7 +67,7 @@ target_link_libraries( "cyan_hwcam" ${CMAKE_DL_LIBS} Threads::Threads )
 configure_file(cyan_hwcamConfig.cmake.in "${PROJECT_BINARY_DIR}/cyan_hwcamConfig.cmake" @ONLY)
 
 install ( FILES "${PROJECT_BINARY_DIR}/cyan_hwcamConfig.cmake" 
-      DESTINATION "${INSTALL_LIB_PATH}/cyan_hwcam" COMPONENT dev )  
+      DESTINATION "${INSTALL_LIB_PATH}/cmake/cyan_hwcam" COMPONENT dev )  
 
 ### Install 
 

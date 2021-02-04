@@ -11,7 +11,7 @@ if (ENABLE_CAM_DUMMY)
 
     add_library( "cam_dummy" SHARED ${dummy_src} ${dummy_hdr} ) 
     
-    set_target_properties( cam_dummy PROPERTIES VERSION ${cyan_hwcam_VERSION_STRING}
+    set_target_properties( cam_dummy PROPERTIES VERSION ${cyan_hwcam_VERSION}
         SOVERSION ${cyan_hwcam_VERSION_MAJOR})
 
     ### Linking

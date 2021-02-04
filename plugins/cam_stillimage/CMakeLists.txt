@@ -11,7 +11,7 @@ if (ENABLE_CAM_STILLIMAGE)
 
     add_library( "cam_stillimage" SHARED ${stillimage_src} ${stillimage_hdr} ) 
     
-    set_target_properties( cam_stillimage PROPERTIES VERSION ${cyan_hwcam_VERSION_STRING}
+    set_target_properties( cam_stillimage PROPERTIES VERSION ${cyan_hwcam_VERSION}
         SOVERSION ${cyan_hwcam_VERSION_MAJOR})
 
     ### Linking
