@@ -39,9 +39,9 @@ int init( void** cam_handle, va_list args ){
     fps = va_arg(args, int) ;
     serial = va_arg(args, char*) ;
 
-    // printf("filename: %s \n", filename ) ;
-    // printf("fps: %d \n", fps ) ;
-    // printf("serial: %s \n", serial ) ;
+    printf("filename: %s \n", filename ) ;
+    printf("fps: %d \n", fps ) ;
+    printf("serial: %s \n", serial ) ;
 
     camera = (cam_still_t*) malloc( sizeof(cam_still_t ) ) ;
     *cam_handle = (void*) camera ;
@@ -65,7 +65,12 @@ int init( void** cam_handle, va_list args ){
 
     camera->modes[0].resolution.cols = camera->img->cols ;
     camera->modes[0].resolution.rows = camera->img->rows ;
-    camera->modes[0].monochrome = camera->img->monochrome ;
+    
+    if ( camera->img->monochrome ) 
+        camera->modes[0].pixel_format = Mono8 ;
+    else
+        camera->modes[0].pixel_format = RGB8 ;       // DIRTY FIXME
+
     camera->modes[0].fps = fps ;
 
     camera->serial = malloc( sizeof(serial) ) ;

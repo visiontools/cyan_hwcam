@@ -1,5 +1,2 @@
 add_subdirectory(cam_dummy)
 add_subdirectory(cam_stillimage)
-add_subdirectory(cam_gstreamer)
-add_subdirectory(cam_ffmpeg)
-add_subdirectory(cam_v4l2)

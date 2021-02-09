@@ -19,6 +19,7 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
     hw_mode_t*  modes ;
     int         nb_modes ;
     int         current_mode ;
+    int         monochrome ;
     
     tmp = (hwcam_t*) malloc( sizeof( hwcam_t ) ) ;
     if ( tmp == NULL ) {
@@ -96,7 +97,7 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
         CYAN_ERROR_MSG("Could not get camera mode") ;
         return NULL ;
     }
-    if ( current_mode = -1 ) {
+    if ( current_mode == -1 ) {
         CYAN_ERROR_MSG("Could not get current mode") ;
         return NULL ;
     }
@@ -105,11 +106,13 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
 
      // Default : Buffer is 1 sec of video
 
+    monochrome = pixelformat_ismono( modes[current_mode].pixel_format ) ;
+
     tmp->img_queue = imqueue_new( 
             modes[current_mode].fps, 
             modes[current_mode].resolution.cols, 
             modes[current_mode].resolution.rows, 
-            modes[current_mode].monochrome ) ; 
+            monochrome ) ; 
 
     if ( tmp->img_queue == NULL ) {
         CYAN_ERROR_MSG("Could not allocate image queue") ;
@@ -198,7 +201,7 @@ int hwcam_set_mode( hwcam_t* cam, int mode) {
         if ( image_resize( cam->img_queue->images[i], 
                     modes[mode].resolution.cols,
                     modes[mode].resolution.rows,
-                    modes[mode].monochrome, NULL ) != ERR_OK ) {
+                    pixelformat_ismono(modes[mode].pixel_format), NULL ) != ERR_OK ) {
             CYAN_ERROR_MSG( "Could not resize images" ) ;
             return ERR_NOPE ;
         }

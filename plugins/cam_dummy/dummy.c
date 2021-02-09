@@ -34,24 +34,24 @@ int get_available_modes( void* cam_handle, hw_mode_t** modes, int* nb_modes ) {
 
     (*modes)[0].resolution.cols = 1280 ;
     (*modes)[0].resolution.rows = 960 ;
-    (*modes)[0].monochrome = 1 ;
+    (*modes)[0].pixel_format = Mono8 ;
     (*modes)[0].fps = 15 ;
 
     (*modes)[1].resolution.cols = 640 ;
     (*modes)[1].resolution.rows = 480 ;
-    (*modes)[1].monochrome = 0 ;
+    (*modes)[1].pixel_format = RGB8 ;
     (*modes)[1].fps = 30 ;
     
     (*modes)[2].resolution.cols = 320 ;
     (*modes)[2].resolution.rows = 240 ;
-    (*modes)[2].monochrome = 0 ;
+    (*modes)[2].pixel_format = RGB8 ;
     (*modes)[2].fps = 60 ;
 
     for(i=0; i<(*nb_modes); i++) {
         printf("[dummy] \t Mode[%d] %dx%d(%d) @%d FPS\n", i, 
                 (*modes)[i].resolution.cols, 
                 (*modes)[i].resolution.rows, 
-                (*modes)[i].monochrome,
+                pixelformat_ismono((*modes)[i].pixel_format),
                 (*modes)[i].fps ) ;
     }
 
