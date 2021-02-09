@@ -10,7 +10,8 @@ project (cyan_hwcam)
 set (cyan_hwcam_VERSION_MAJOR 0)
 set (cyan_hwcam_VERSION_MINOR 1)
 set (cyan_hwcam_VERSION_PATCH 0)
-set (cyan_hwcam_VERSION ${cyan_hwcam_VERSION_MAJOR}.${cyan_hwcam_VERSION_MINOR}.${cyan_hwcam_VERSION_PATCH} )
+set (cyan_hwcam_VERSION
+    "${cyan_hwcam_VERSION_MAJOR}.${cyan_hwcam_VERSION_MINOR}.${cyan_hwcam_VERSION_PATCH}" )
 
 set( CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /lib /usr/lib /usr/local/lib )
 set( CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include /usr/local/include )

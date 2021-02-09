@@ -7,15 +7,15 @@
  
 # Tell the user project where to find our headers and libraries
 
-FIND_PACKAGE_MESSAGE(cyan_hwcam "Found cyan_hwcam @cyan_hwcam_VERSION_STRING@" "[${CYAN_HWCAM_LIBRARY}][${CYAN_HWCAM_INCLUDE_DIR}]" )
 
 set(CYAN_HWCAM_VERSION_MAJOR  @cyan_VERSION_MAJOR@)
 set(CYAN_HWCAM_VERSION_MINOR  @cyan_VERSION_MINOR@)
 set(CYAN_HWCAM_VERSION_PATCH  @cyan_VERSION_PATCH@)
-set(CYAN_HVCAM_VERSION_STRING "@cyan_VERSION_STRING@")
+set(CYAN_HVCAM_VERSION_STRING "@cyan_VERSION@")
 
 set(CYAN_HWCAM_INCLUDE_DIR "@INSTALL_HEADERS_PATH@" )
 set(CYAN_HWCAM_LIBRARY_DIR "@INSTALL_LIB_PATH@")
 set(CYAN_HWCAM_LIBRARY    cyan_hwcam )
     
+message(STATUS "Found cyan_hwcam @cyan_hwcam_VERSION@" )
 mark_as_advanced( CYAN_HWCAM_INCLUDE_DIR CYAN_HWCAM_LIBRARY_DIR CYAN_HWCAM_LIBRARY ) 
