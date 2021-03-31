@@ -6,6 +6,8 @@
 
 #include "cyan/hwcam/plugin.h"
 #include "cyan/hwcam/modes.h"
+#include "cyan/hwcam/pixelformats.h"
+#include "cyan/hwcam/imageformats.h"
 #include "cyan/common/error.h"
 
 
@@ -32,25 +34,28 @@ int get_available_modes( void* cam_handle, hw_mode_t** modes, int* nb_modes ) {
     *nb_modes = 3 ;
     *modes = (hw_mode_t*) malloc ( (*nb_modes)*sizeof(hw_mode_t) ) ;
 
-    (*modes)[0].resolution.cols = 1280 ;
-    (*modes)[0].resolution.rows = 960 ;
+    (*modes)[0].cols = 1280 ;
+    (*modes)[0].rows = 960 ;
     (*modes)[0].pixel_format = Mono8 ;
+    (*modes)[0].image_format = FMT_PLANE ;
     (*modes)[0].fps = 15 ;
 
-    (*modes)[1].resolution.cols = 640 ;
-    (*modes)[1].resolution.rows = 480 ;
+    (*modes)[1].cols = 640 ;
+    (*modes)[1].rows = 480 ; 
     (*modes)[1].pixel_format = RGB8 ;
+    (*modes)[0].image_format = FMT_PLANE ;
     (*modes)[1].fps = 30 ;
     
-    (*modes)[2].resolution.cols = 320 ;
-    (*modes)[2].resolution.rows = 240 ;
+    (*modes)[2].cols = 320 ;
+    (*modes)[2].rows = 240 ;
     (*modes)[2].pixel_format = RGB8 ;
+    (*modes)[0].image_format = FMT_PLANE ;
     (*modes)[2].fps = 60 ;
 
     for(i=0; i<(*nb_modes); i++) {
-        printf("[dummy] \t Mode[%d] %dx%d(%d) @%d FPS\n", i, 
-                (*modes)[i].resolution.cols, 
-                (*modes)[i].resolution.rows, 
+        printf("[dummy] \t Mode[%d] %dx%d(%d) @%f FPS\n", i, 
+                (*modes)[i].cols, 
+                (*modes)[i].rows, 
                 pixelformat_ismono((*modes)[i].pixel_format),
                 (*modes)[i].fps ) ;
     }

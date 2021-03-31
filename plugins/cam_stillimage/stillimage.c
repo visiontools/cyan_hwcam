@@ -8,6 +8,8 @@
 
 #include "cyan/hwcam/plugin.h"
 #include "cyan/hwcam/modes.h"
+#include "cyan/hwcam/imageformats.h"
+#include "cyan/hwcam/pixelformats.h"
 #include "cyan/common/error.h"
 
 typedef struct {
@@ -63,8 +65,9 @@ int init( void** cam_handle, va_list args ){
         return ERR_MALLOC ;
     }
 
-    camera->modes[0].resolution.cols = camera->img->cols ;
-    camera->modes[0].resolution.rows = camera->img->rows ;
+    camera->modes[0].cols = camera->img->cols ;
+    camera->modes[0].rows = camera->img->rows ;
+    camera->modes[0].image_format = FMT_PLANE ;
     
     if ( camera->img->monochrome ) 
         camera->modes[0].pixel_format = Mono8 ;
@@ -174,7 +177,7 @@ int get_frame ( void* cam_handle, image_t* img ) {
         if ( ((int) cam->wait) < 0 )
             cam->wait = 1 ;
    
-        printf("FPS : %f / %d ( %d ) \n", fps, cam->modes[0].fps, (int) cam->wait ) ;
+        printf("FPS : %f / %f ( %d ) \n", fps, cam->modes[0].fps, (int) cam->wait ) ;
         
         cam->img_count = 0 ;
         gettimeofday(&(cam->t0),NULL) ; 

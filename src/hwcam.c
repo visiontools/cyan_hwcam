@@ -5,6 +5,7 @@
 
 #include <cyan/common/error.h>
 #include "cyan/hwcam/hwcam.h"
+#include "cyan/hwcam/pixelformats.h"
 #include "imqueue.h"
 
 #define BACKOFF_TIME    50
@@ -110,8 +111,8 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
 
     tmp->img_queue = imqueue_new( 
             modes[current_mode].fps, 
-            modes[current_mode].resolution.cols, 
-            modes[current_mode].resolution.rows, 
+            modes[current_mode].cols, 
+            modes[current_mode].rows, 
             monochrome ) ; 
 
     if ( tmp->img_queue == NULL ) {
@@ -199,8 +200,8 @@ int hwcam_set_mode( hwcam_t* cam, int mode) {
 
     for (i=0; i<cam->img_queue->buffer_size; i++ ) 
         if ( image_resize( cam->img_queue->images[i], 
-                    modes[mode].resolution.cols,
-                    modes[mode].resolution.rows,
+                    modes[mode].cols,
+                    modes[mode].rows,
                     pixelformat_ismono(modes[mode].pixel_format), NULL ) != ERR_OK ) {
             CYAN_ERROR_MSG( "Could not resize images" ) ;
             return ERR_NOPE ;
