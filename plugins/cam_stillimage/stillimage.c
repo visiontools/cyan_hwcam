@@ -67,14 +67,24 @@ int init( void** cam_handle, va_list args ){
 
     camera->modes[0].cols = camera->img->cols ;
     camera->modes[0].rows = camera->img->rows ;
-    camera->modes[0].image_format = FMT_PLANE ;
-    
-    if ( camera->img->monochrome ) 
-        camera->modes[0].pixel_format = Mono8 ;
-    else
-        camera->modes[0].pixel_format = RGB8 ;       // DIRTY FIXME
-
     camera->modes[0].fps = fps ;
+    camera->modes[0].image_format  = FMT_PLANE ;
+    camera->modes[0].enabled = 1 ;
+    
+    if ( camera->img->monochrome ){ 
+        camera->modes[0].pixel_format = Mono8 ;
+        snprintf(camera->modes[0].description, 100, "Mono8 %dx%d %f FPS", 
+                camera->modes[0].cols,
+                camera->modes[0].rows,
+                camera->modes[0].fps) ;
+    }
+    else {
+        camera->modes[0].pixel_format = RGB8 ;       // DIRTY FIXME
+        snprintf(camera->modes[0].description, 100, "Mono8 %dx%d %f FPS", 
+                camera->modes[0].cols,
+                camera->modes[0].rows,
+                camera->modes[0].fps) ;
+    }
 
     camera->serial = malloc( sizeof(serial) ) ;
     if ( camera->serial == NULL ) {

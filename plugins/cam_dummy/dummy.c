@@ -39,18 +39,24 @@ int get_available_modes( void* cam_handle, hw_mode_t** modes, int* nb_modes ) {
     (*modes)[0].pixel_format = Mono8 ;
     (*modes)[0].image_format = FMT_PLANE ;
     (*modes)[0].fps = 15 ;
+    snprintf((*modes)[0].description, 100, "Mono8 1280x960 15FPS") ;
+    (*modes)[2].enabled = 1 ;
 
     (*modes)[1].cols = 640 ;
     (*modes)[1].rows = 480 ; 
     (*modes)[1].pixel_format = RGB8 ;
     (*modes)[0].image_format = FMT_PLANE ;
+    snprintf((*modes)[0].description, 100, "Mono8 640x480 30FPS") ;
     (*modes)[1].fps = 30 ;
+    (*modes)[2].enabled = 1 ;
     
     (*modes)[2].cols = 320 ;
     (*modes)[2].rows = 240 ;
     (*modes)[2].pixel_format = RGB8 ;
     (*modes)[0].image_format = FMT_PLANE ;
     (*modes)[2].fps = 60 ;
+    snprintf((*modes)[0].description, 100, "Mono8 320x240 60FPS") ;
+    (*modes)[2].enabled = 1 ;
 
     for(i=0; i<(*nb_modes); i++) {
         printf("[dummy] \t Mode[%d] %dx%d(%d) @%f FPS\n", i, 

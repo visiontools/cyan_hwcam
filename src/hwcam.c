@@ -95,14 +95,18 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
 
     current_mode = -1 ;
     if ( tmp->get_mode( tmp->cam_handle, &current_mode ) != ERR_OK ) {
-        CYAN_ERROR_MSG("Could not get camera mode") ;
+        CYAN_ERROR_MSG("Could not get current camera mode") ;
         return NULL ;
     }
     if ( current_mode == -1 ) {
-        CYAN_ERROR_MSG("Could not get current mode") ;
+        CYAN_ERROR_MSG("Could not get current camera mode") ;
         return NULL ;
     }
 
+    if ( modes[current_mode].enabled != 1 ) {
+        CYAN_ERROR_MSG("Current camera mode is not supported by cyan") ;
+        return NULL ;
+    }
 
 
      // Default : Buffer is 1 sec of video
@@ -186,6 +190,17 @@ int hwcam_set_mode( hwcam_t* cam, int mode) {
         CYAN_ERROR_MSG( "Camera is Running") ;
         return ERR_NOPE ;
     }
+    
+    if ( cam->get_available_modes( cam->cam_handle, &modes, &nb_modes ) != ERR_OK ) {
+        CYAN_ERROR_MSG("Could not retrieve available modes") ;
+        return ERR_NOPE ;
+    }
+    
+    if ( modes[mode].enabled != 1 ) {
+        CYAN_ERROR_MSG( "Requested mode is not supported.") ;
+        return ERR_NOPE ;
+    }
+    
     if ( cam->set_mode( cam->cam_handle, mode ) != ERR_OK ) {
         CYAN_ERROR( ERR_NOPE ) ;
         return ERR_NOPE ;
@@ -193,10 +208,6 @@ int hwcam_set_mode( hwcam_t* cam, int mode) {
 
     // resize images in queue
 
-    if ( cam->get_available_modes( cam->cam_handle, &modes, &nb_modes ) != ERR_OK ) {
-        CYAN_ERROR_MSG("Could not retrieve available modes") ;
-        return ERR_NOPE ;
-    }
 
     for (i=0; i<cam->img_queue->buffer_size; i++ ) 
         if ( image_resize( cam->img_queue->images[i], 
