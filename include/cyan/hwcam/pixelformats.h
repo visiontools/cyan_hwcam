@@ -5,6 +5,8 @@
 
 int pixelformat_ismono( uint32_t ) ;
 
+#define Unsupported               0xFFFFFFFF  // Not supported by cyan
+
 // Generated from GenICam Pixel Format Names and Values            
 // Version 14-October-2020            
 
