@@ -108,7 +108,6 @@ hwcam_t* hwcam_new( unsigned char* plugin, ... ) {
         return NULL ;
     }
 
-
      // Default : Buffer is 1 sec of video
 
     monochrome = pixelformat_ismono( modes[current_mode].pixel_format ) ;
